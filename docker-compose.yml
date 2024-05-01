@@ -1,0 +1,36 @@
+version: '3'
+
+networks:
+  backend:
+    driver: bridge
+
+services:
+  database:
+    hostname: database
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=SA
+      - POSTGRES_PASSWORD=maslo#2!X
+      - POSTGRES_DB=ProjektZaliczenie_Db
+    ports:
+      - "5432:5432"
+    networks: 
+      - backend
+
+  backend:
+    build: backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - database
+    networks: 
+      - backend
+
+  frontend:
+    build: frontend
+    ports:
+      - "4200:4200" 
+    networks:
+      - backend
