@@ -53,4 +53,11 @@ services:
     ports:
       - "4200:4200" 
     networks:
-      - backend      
+      - backend
+
+  frontend-tests:
+    build:
+      context: frontend
+      target: test
+    networks:
+      - backend     

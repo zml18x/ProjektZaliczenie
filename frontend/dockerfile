@@ -1,5 +1,17 @@
-FROM node:alpine
+FROM node:alpine AS builder
 
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont
+
+ENV CHROME_BIN=/usr/bin/chromium-browser \
+    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+    
 WORKDIR /src/app
 
 COPY package.json package-lock.json* ./
@@ -12,4 +24,8 @@ COPY . .
 
 EXPOSE 4200
 
+FROM builder AS test
+CMD ["ng", "test", "--watch=false"]
+
+FROM builder
 CMD ["ng", "serve", "--host", "0.0.0.0"]
