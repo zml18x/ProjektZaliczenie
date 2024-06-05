@@ -38,9 +38,19 @@ services:
     networks: 
       - backend
 
+  backend-tests:
+    build: backend
+    volumes:
+      - .:/app
+    depends_on:
+      - database
+    networks: 
+      - backend
+    command: ["sh", "-c", "python manage.py test"]    
+
   frontend:
     build: frontend
     ports:
       - "4200:4200" 
     networks:
-      - backend  
+      - backend      
